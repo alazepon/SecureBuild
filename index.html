@@ -28,7 +28,6 @@
             height: 100%; /* GIF будет занимать всю высоту контейнера */
             object-fit: contain; /* Сохраняет пропорции GIF */
             opacity: 0;
-            transition: opacity 1s;
         }
         #gif1.active, #gif2.active {
             opacity: 1;
@@ -39,7 +38,7 @@
     <div id="gif-container">
         <img id="gif1" src="5.gif" alt="GIF 1" class="active">
         <div id="gif2" alt="GIF 2">
-            <video autoplay loop muted style="width: 100%; height: auto;">
+            <video autoplay loop muted style="width: 100%; height: 100%;">
                 <source src="5.mp4" type="video/mp4">
             </video>
         </div>
