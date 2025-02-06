@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIF/MP4 Анимации</title>
+    <title>GIF Анимации</title>
     <style>
         body {
             display: flex;
@@ -13,74 +13,61 @@
             margin: 0;
             background-color: #000;
         }
-        #media-container {
+        #gif-container {
             position: relative;
             width: 300px; /* Фиксированная ширина контейнера */
             height: 300px; /* Фиксированная высота контейнера */
             overflow: hidden;
         }
-        #media1, #media2 {
+        #gif1, #gif2 {
             position: absolute;
-            object-fit: contain; /* Сохраняет пропорции GIF */
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 100%; /* Масштабируем по ширине контейнера */
-            height: auto; /* Сохраняем пропорции */
+            width: 100%; /* GIF будет занимать всю ширину контейнера */
+            height: 100%; /* GIF будет занимать всю высоту контейнера */
+            object-fit: contain; /* Сохраняет пропорции GIF */
             opacity: 0;
             transition: opacity 1s;
         }
-        #media1.active, #media2.active {
+        #gif1.active, #gif2.active {
             opacity: 1;
         }
     </style>
 </head>
 <body>
-    <div id="media-container">
-        <!-- Первый медиафайл -->
-        <div id="media1" class="active">
-            <!-- <img src="gif1.gif" alt="GIF 1" style="width: 100%; height: auto;">-->
-            <video autoplay loop muted style="width: 100%; height: auto;">
-                <source src="5.mp4" type="video/mp4">
-            </video>
-        </div>
-        <!-- Второй медиафайл -->
-        <div id="media2">
-            <img src="5.gif" alt="GIF 2" style="width: 100%; height: auto;">
-            <!-- Или для MP4:
-            <video autoplay loop muted style="width: 100%; height: auto;">
-                <source src="video2.mp4" type="video/mp4">
-            </video>
-            -->
-        </div>
+    <div id="gif-container">
+        <img id="gif1" src="5.gif" alt="GIF 1" class="active">
+        <img id="gif2" src="gif2.gif" alt="GIF 2">
     </div>
 
     <script>
-	// Время проигрывания каждой GIF-анимации (в миллисекундах)
+        // Время проигрывания каждой GIF-анимации (в миллисекундах)
         const gifTimes = {
-            gif1: 7000, // 7 секунд для gif1
-            gif2: 7000, // 7 секунды для gif2
+            gif1: 7000, // 5 секунд для gif1
+            gif2: 7000, // 3 секунды для gif2
         };
 
-        let currentMedia = 1;
-        const media1 = document.getElementById('media1');
-        const media2 = document.getElementById('media2');
+        let currentGif = 1;
+        const gif1 = document.getElementById('gif1');
+        const gif2 = document.getElementById('gif2');
 
-        function switchMedia() {
-            if (currentMedia == 1) {
-                media1.classList.remove('active');
-                media2.classList.add('active');
-                currentMedia = 2;
-		setInterval(switchMedia, gifTimes.gif2);
+        function switchGif() {
+            if (currentGif === 1) {
+                gif1.classList.remove('active');
+                gif2.classList.add('active');
+                currentGif = 2;
+                setTimeout(switchGif, gifTimes.gif2); // Переключение через время gif2
             } else {
-                media2.classList.remove('active');
-                media1.classList.add('active');
-                currentMedia = 1;
-		setInterval(switchMedia, gifTimes.gif1);	
+                gif2.classList.remove('active');
+                gif1.classList.add('active');
+                currentGif = 1;
+                setTimeout(switchGif, gifTimes.gif1); // Переключение через время gif1
             }
         }
 
-        setInterval(switchMedia, gifTimes.gif1); // Меняем медиа каждые 5 секунд
+        // Запуск переключения через время первой GIF-анимации
+        setTimeout(switchGif, gifTimes.gif1);
     </script>
 </body>
 </html>
