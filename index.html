@@ -15,8 +15,8 @@
         }
         #gif-container {
             position: relative;
-            width: 500px; /* Фиксированная ширина контейнера */
-            height: 500px; /* Фиксированная высота контейнера */
+            width: 300px; /* Фиксированная ширина контейнера */
+            height: 300px; /* Фиксированная высота контейнера */
             overflow: hidden;
         }
         #gif1, #gif2 {
@@ -26,7 +26,7 @@
             transform: translate(-50%, -50%);
             width: 100%; /* GIF будет занимать всю ширину контейнера */
             height: 100%; /* GIF будет занимать всю высоту контейнера */
-            object-fit: cover; /* Сохраняет пропорции GIF */
+            object-fit: contain; /* Сохраняет пропорции GIF */
             opacity: 0;
             transition: opacity 1s;
         }
