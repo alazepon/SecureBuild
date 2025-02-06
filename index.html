@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIF Анимации</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000;
+        }
+        #gif-container {
+            position: relative;
+            width: 500px; /* Фиксированная ширина контейнера */
+            height: 500px; /* Фиксированная высота контейнера */
+            overflow: hidden;
+        }
+        #gif1, #gif2 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%; /* GIF будет занимать всю ширину контейнера */
+            height: 100%; /* GIF будет занимать всю высоту контейнера */
+            object-fit: cover; /* Сохраняет пропорции GIF */
+            opacity: 0;
+            transition: opacity 1s;
+        }
+        #gif1.active, #gif2.active {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="gif-container">
+        <img id="gif1" src="5.gif" alt="GIF 1" class="active">
+        <img id="gif2" src="5.gif" alt="GIF 2">
+    </div>
+
+    <script>
+        // Время проигрывания каждой GIF-анимации (в миллисекундах)
+        const gifTimes = {
+            gif1: 7000, // 5 секунд для gif1
+            gif2: 7000, // 3 секунды для gif2
+        };
+
+        let currentGif = 1;
+        const gif1 = document.getElementById('gif1');
+        const gif2 = document.getElementById('gif2');
+
+        function switchGif() {
+            if (currentGif === 1) {
+                gif1.classList.remove('active');
+                gif2.classList.add('active');
+                currentGif = 2;
+                setTimeout(switchGif, gifTimes.gif2); // Переключение через время gif2
+            } else {
+                gif2.classList.remove('active');
+                gif1.classList.add('active');
+                currentGif = 1;
+                setTimeout(switchGif, gifTimes.gif1); // Переключение через время gif1
+            }
+        }
+
+        // Запуск переключения через время первой GIF-анимации
+        setTimeout(switchGif, gifTimes.gif1);
+    </script>
+</body>
+</html>
