@@ -15,8 +15,8 @@
         }
         #media-container {
             position: relative;
-            width: 500px; /* Фиксированная ширина контейнера */
-            height: 500px; /* Фиксированная высота контейнера */
+            width: 300px; /* Фиксированная ширина контейнера */
+            height: 300px; /* Фиксированная высота контейнера */
             overflow: hidden;
         }
         #media1, #media2 {
@@ -56,6 +56,12 @@
     </div>
 
     <script>
+	// Время проигрывания каждой GIF-анимации (в миллисекундах)
+        const gifTimes = {
+            gif1: 7000, // 7 секунд для gif1
+            gif2: 7000, // 7 секунды для gif2
+        };
+
         let currentMedia = 1;
         const media1 = document.getElementById('media1');
         const media2 = document.getElementById('media2');
@@ -65,14 +71,16 @@
                 media1.classList.remove('active');
                 media2.classList.add('active');
                 currentMedia = 2;
+		setInterval(switchMedia, gifTimes.gif2);
             } else {
                 media2.classList.remove('active');
                 media1.classList.add('active');
                 currentMedia = 1;
+		setInterval(switchMedia, gifTimes.gif1);	
             }
         }
 
-        setInterval(switchMedia, 7000); // Меняем медиа каждые 5 секунд
+        setInterval(switchMedia, gifTimes.gif1); // Меняем медиа каждые 5 секунд
     </script>
 </body>
 </html>
