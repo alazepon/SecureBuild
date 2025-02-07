@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebM Видео</title>
+    <title>WebM с удалением фона</title>
     <style>
         body {
             display: flex;
@@ -11,71 +11,103 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #00da2b;
+            background-color: #000;
         }
         #media-container {
             position: relative;
-            width: 800px; /* Ширина контейнера */
-            height: 450px; /* Высота контейнера (16:9) */
+            width: 800px;
+            height: 450px;
             overflow: hidden;
         }
-        #media1, #media2 {
+        video {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 100%; /* Масштабируем по ширине контейнера */
-            height: auto; /* Сохраняем пропорции */
-            opacity: 0;
-            transition: opacity 1s;
-            object-fit: contain;
-        }
-        #media1.active, #media2.active {
+            width: 100%;
+            height: auto;
             opacity: 1;
+            transition: opacity 1s;
+            mix-blend-mode: screen; /* Удаление зеленого фона */
+        }
+        /* Цвет фона, который нужно удалить */
+        video::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: green; /* Зеленый фон */
+            mix-blend-mode: difference; /* Удаление зеленого фона */
         }
     </style>
 </head>
 <body>
     <div id="media-container">
-        <!-- Первое видео (7 секунд) -->
-        <div id="media1" class="active">
-            <video autoplay loop muted style="width: 100%; height: auto;">
-                <source src="General.webm" type="video/webm">
-            </video>
-        </div>
-        <!-- Второе видео (20 секунд) -->
-        <div id="media2">
-            <video autoplay loop muted style="width: 100%; height: auto;">
-                <source src="General_HS_1920х1080_6.webm" type="video/webm">
-            </video>
-        </div>
+        <!-- Видео будут добавляться сюда динамически -->
     </div>
 
     <script>
-        let currentMedia = 1;
-        const media1 = document.getElementById('media1');
-        const media2 = document.getElementById('media2');
+        const mediaContainer = document.getElementById('media-container');
+        const videos = [
+            { src: 'General.webm', duration: 20000, loop: false }, // Первое видео (7 секунд, не зациклено)
+            { src: 'General_HS_1920х1080_6.webm', duration: 7000, loop: true }, // Второе видео (20 секунд, зациклено)
+        ];
+        let currentVideoIndex = 0;
+        let secondVideoPlayCount = 0; // Счетчик для второго видео
 
-        // Длительности видео в миллисекундах
-        const duration1 = 20000; // 7 секунд
-        const duration2 = 7000; // 20 секунд
-
-        function switchMedia() {
-            if (currentMedia === 1) {
-                media1.classList.remove('active');
-                media2.classList.add('active');
-                currentMedia = 2;
-                setTimeout(switchMedia, duration2); // Переключение через 20 секунд
-            } else {
-                media2.classList.remove('active');
-                media1.classList.add('active');
-                currentMedia = 1;
-                setTimeout(switchMedia, duration1); // Переключение через 7 секунд
-            }
+        // Функция для создания видеоэлемента
+        function createVideoElement(src, loop) {
+            const video = document.createElement('video');
+            video.src = src;
+            video.autoplay = true;
+            video.loop = loop;
+            video.muted = true;
+            video.style.width = '100%';
+            video.style.height = 'auto';
+            return video;
         }
 
-        // Начинаем переключение
-        setTimeout(switchMedia, duration1); // Первое переключение через 7 секунд
+        // Функция для воспроизведения следующего видео
+        function playNextVideo() {
+            // Удаляем текущее видео, если оно есть
+            if (mediaContainer.firstChild) {
+                const currentVideo = mediaContainer.firstChild;
+                // Плавное исчезновение
+                currentVideo.style.opacity = '0';
+                setTimeout(() => {
+                    mediaContainer.removeChild(currentVideo);
+                }, 1000); // Ждем завершения анимации
+            }
+
+            // Определяем, какое видео воспроизводить
+            let videoToPlay;
+            if (currentVideoIndex === 0) {
+                // Первое видео (1 раз)
+                videoToPlay = videos[0];
+                currentVideoIndex = 1; // Переключаемся на второе видео
+            } else {
+                // Второе видео (3 раза)
+                videoToPlay = videos[1];
+                secondVideoPlayCount++;
+                if (secondVideoPlayCount >= 3) {
+                    // После 3 воспроизведений переключаемся на первое видео
+                    currentVideoIndex = 0;
+                    secondVideoPlayCount = 0;
+                }
+            }
+
+            // Добавляем новое видео
+            const nextVideo = createVideoElement(videoToPlay.src, videoToPlay.loop);
+            mediaContainer.appendChild(nextVideo);
+
+            // Переключаемся на следующее видео через указанное время
+            setTimeout(playNextVideo, videoToPlay.duration);
+        }
+
+        // Запускаем воспроизведение первого видео
+        playNextVideo();
     </script>
 </body>
 </html>
